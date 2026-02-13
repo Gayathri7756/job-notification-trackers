@@ -447,6 +447,7 @@ function renderSettings() {
             <div class="form-actions">
               <button type="button" class="btn btn-primary" onclick="savePreferences()">Save Preferences</button>
               <button type="button" class="btn btn-secondary" onclick="window.location.hash='dashboard'">Cancel</button>
+              ${Object.keys(prefs).length > 0 ? '<button type="button" class="btn btn-warning" onclick="clearPreferences()">Clear Preferences</button>' : ''}
             </div>
           </form>
         </div>
@@ -489,6 +490,16 @@ function savePreferences() {
   
   alert('Preferences saved successfully!');
   window.location.hash = 'dashboard';
+}
+
+function clearPreferences() {
+  if (confirm('Are you sure you want to clear all preferences?')) {
+    localStorage.removeItem('jobTrackerPreferences');
+    userPreferences = null;
+    showOnlyMatches = false;
+    alert('Preferences cleared successfully!');
+    window.location.hash = 'dashboard';
+  }
 }
 
 function renderSaved() {
