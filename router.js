@@ -214,6 +214,22 @@ function toggleMatchFilter() {
   applyFilters();
 }
 
+function clearFilters() {
+  // Reset all filter values
+  document.getElementById('filterKeyword').value = '';
+  document.getElementById('filterLocation').value = '';
+  document.getElementById('filterMode').value = '';
+  document.getElementById('filterExperience').value = '';
+  document.getElementById('filterSource').value = '';
+  document.getElementById('filterSort').value = 'latest';
+  
+  // Reset filtered jobs to all jobs
+  filteredJobs = [...jobsData].sort((a, b) => a.postedDaysAgo - b.postedDaysAgo);
+  
+  // Re-render dashboard
+  renderDashboard();
+}
+
 // Route definitions
 const routes = {
   home: {
@@ -260,6 +276,16 @@ function renderDashboard() {
   const hasPreferences = userPreferences !== null;
   const minScore = userPreferences?.minMatchScore || 40;
   
+  // Preserve current filter values
+  const currentFilters = {
+    keyword: document.getElementById('filterKeyword')?.value || '',
+    location: document.getElementById('filterLocation')?.value || '',
+    mode: document.getElementById('filterMode')?.value || '',
+    experience: document.getElementById('filterExperience')?.value || '',
+    source: document.getElementById('filterSource')?.value || '',
+    sort: document.getElementById('filterSort')?.value || 'latest'
+  };
+  
   routeContent.innerHTML = `
     <div class="page-header">
       <h1>Dashboard</h1>
@@ -283,43 +309,44 @@ function renderDashboard() {
     ` : ''}
     
     <div class="filter-bar">
-      <input type="text" id="filterKeyword" class="input filter-input" placeholder="Search by title or company">
+      <input type="text" id="filterKeyword" class="input filter-input" placeholder="Search by title or company" value="${currentFilters.keyword}">
       
       <select id="filterLocation" class="input filter-select">
         <option value="">All Locations</option>
-        ${uniqueLocations.map(loc => `<option value="${loc}">${loc}</option>`).join('')}
+        ${uniqueLocations.map(loc => `<option value="${loc}" ${currentFilters.location === loc ? 'selected' : ''}>${loc}</option>`).join('')}
       </select>
       
       <select id="filterMode" class="input filter-select">
         <option value="">All Modes</option>
-        <option value="Remote">Remote</option>
-        <option value="Hybrid">Hybrid</option>
-        <option value="Onsite">Onsite</option>
+        <option value="Remote" ${currentFilters.mode === 'Remote' ? 'selected' : ''}>Remote</option>
+        <option value="Hybrid" ${currentFilters.mode === 'Hybrid' ? 'selected' : ''}>Hybrid</option>
+        <option value="Onsite" ${currentFilters.mode === 'Onsite' ? 'selected' : ''}>Onsite</option>
       </select>
       
       <select id="filterExperience" class="input filter-select">
         <option value="">All Experience</option>
-        <option value="Fresher">Fresher</option>
-        <option value="0-1">0-1 years</option>
-        <option value="1-3">1-3 years</option>
-        <option value="3-5">3-5 years</option>
+        <option value="Fresher" ${currentFilters.experience === 'Fresher' ? 'selected' : ''}>Fresher</option>
+        <option value="0-1" ${currentFilters.experience === '0-1' ? 'selected' : ''}>0-1 years</option>
+        <option value="1-3" ${currentFilters.experience === '1-3' ? 'selected' : ''}>1-3 years</option>
+        <option value="3-5" ${currentFilters.experience === '3-5' ? 'selected' : ''}>3-5 years</option>
       </select>
       
       <select id="filterSource" class="input filter-select">
         <option value="">All Sources</option>
-        <option value="LinkedIn">LinkedIn</option>
-        <option value="Naukri">Naukri</option>
-        <option value="Indeed">Indeed</option>
+        <option value="LinkedIn" ${currentFilters.source === 'LinkedIn' ? 'selected' : ''}>LinkedIn</option>
+        <option value="Naukri" ${currentFilters.source === 'Naukri' ? 'selected' : ''}>Naukri</option>
+        <option value="Indeed" ${currentFilters.source === 'Indeed' ? 'selected' : ''}>Indeed</option>
       </select>
       
       <select id="filterSort" class="input filter-select">
-        <option value="latest">Latest First</option>
-        ${hasPreferences ? '<option value="match">Match Score</option>' : ''}
-        <option value="salary">Salary (High to Low)</option>
-        <option value="company">Company A-Z</option>
+        <option value="latest" ${currentFilters.sort === 'latest' ? 'selected' : ''}>Latest First</option>
+        ${hasPreferences ? `<option value="match" ${currentFilters.sort === 'match' ? 'selected' : ''}>Match Score</option>` : ''}
+        <option value="salary" ${currentFilters.sort === 'salary' ? 'selected' : ''}>Salary (High to Low)</option>
+        <option value="company" ${currentFilters.sort === 'company' ? 'selected' : ''}>Company A-Z</option>
       </select>
       
       <button class="btn btn-primary" onclick="applyFilters()">Apply Filters</button>
+      <button class="btn btn-secondary" onclick="clearFilters()">Clear Filters</button>
     </div>
     
     <div class="jobs-grid">
@@ -368,14 +395,15 @@ function renderDashboard() {
     </div>
   `;
   
-  // Attach event listeners for auto-filtering
+  // Only attach event listener for keyword search (live search)
   setTimeout(() => {
-    document.getElementById('filterKeyword')?.addEventListener('input', applyFilters);
-    document.getElementById('filterLocation')?.addEventListener('change', applyFilters);
-    document.getElementById('filterMode')?.addEventListener('change', applyFilters);
-    document.getElementById('filterExperience')?.addEventListener('change', applyFilters);
-    document.getElementById('filterSource')?.addEventListener('change', applyFilters);
-    document.getElementById('filterSort')?.addEventListener('change', applyFilters);
+    const keywordInput = document.getElementById('filterKeyword');
+    if (keywordInput) {
+      keywordInput.addEventListener('input', () => {
+        // Auto-apply only for keyword search
+        applyFilters();
+      });
+    }
   }, 0);
 }
 
