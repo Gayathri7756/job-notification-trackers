@@ -368,8 +368,15 @@ function renderDashboard() {
     </div>
   `;
   
-  // Attach event listeners
-  document.getElementById('filterKeyword')?.addEventListener('input', applyFilters);
+  // Attach event listeners for auto-filtering
+  setTimeout(() => {
+    document.getElementById('filterKeyword')?.addEventListener('input', applyFilters);
+    document.getElementById('filterLocation')?.addEventListener('change', applyFilters);
+    document.getElementById('filterMode')?.addEventListener('change', applyFilters);
+    document.getElementById('filterExperience')?.addEventListener('change', applyFilters);
+    document.getElementById('filterSource')?.addEventListener('change', applyFilters);
+    document.getElementById('filterSort')?.addEventListener('change', applyFilters);
+  }, 0);
 }
 
 function renderSettings() {

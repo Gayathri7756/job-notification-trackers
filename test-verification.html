@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Match Score Color Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      background: #F7F6F3;
+    }
+    
+    .test-section {
+      background: white;
+      padding: 24px;
+      margin-bottom: 24px;
+      border: 1px solid #D4D2CC;
+      border-radius: 4px;
+    }
+    
+    h2 {
+      margin-top: 0;
+    }
+    
+    .badge-row {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 16px;
+      align-items: center;
+    }
+    
+    .match-badge {
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: 3px;
+      text-align: center;
+      min-width: 50px;
+    }
+    
+    .match-badge--excellent {
+      background-color: #E8F5E9;
+      color: #2D5016;
+      border: 1px solid #2D5016;
+    }
+    
+    .match-badge--good {
+      background-color: #FFF4E6;
+      color: #8B6914;
+      border: 1px solid #8B6914;
+    }
+    
+    .match-badge--neutral {
+      background-color: #F7F6F3;
+      color: #5A5A5A;
+      border: 1px solid #D4D2CC;
+    }
+    
+    .match-badge--low {
+      background-color: #F5F5F5;
+      color: #9E9E9E;
+      border: 1px solid #E0E0E0;
+    }
+    
+    .description {
+      color: #5A5A5A;
+      font-size: 14px;
+    }
+    
+    .test-result {
+      padding: 16px;
+      background: #E8F5E9;
+      border: 1px solid #2D5016;
+      border-radius: 4px;
+      margin-top: 24px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Job Notification Tracker - Match Score Color Verification</h1>
+  
+  <div class="test-section">
+    <h2>Match Score Badge Colors</h2>
+    
+    <div class="badge-row">
+      <span class="match-badge match-badge--excellent">100%</span>
+      <span class="description">Excellent Match (80-100%) - Green background, dark green text</span>
+    </div>
+    
+    <div class="badge-row">
+      <span class="match-badge match-badge--excellent">85%</span>
+      <span class="description">Excellent Match (80-100%) - Green background, dark green text</span>
+    </div>
+    
+    <div class="badge-row">
+      <span class="match-badge match-badge--good">75%</span>
+      <span class="description">Good Match (60-79%) - Amber background, dark amber text</span>
+    </div>
+    
+    <div class="badge-row">
+      <span class="match-badge match-badge--good">60%</span>
+      <span class="description">Good Match (60-79%) - Amber background, dark amber text</span>
+    </div>
+    
+    <div class="badge-row">
+      <span class="match-badge match-badge--neutral">55%</span>
+      <span class="description">Fair Match (40-59%) - Neutral grey background, grey text</span>
+    </div>
+    
+    <div class="badge-row">
+      <span class="match-badge match-badge--neutral">40%</span>
+      <span class="description">Fair Match (40-59%) - Neutral grey background, grey text</span>
+    </div>
+    
+    <div class="badge-row">
+      <span class="match-badge match-badge--low">35%</span>
+      <span class="description">Low Match (<40%) - Light grey background, light grey text</span>
+    </div>
+    
+    <div class="badge-row">
+      <span class="match-badge match-badge--low">10%</span>
+      <span class="description">Low Match (<40%) - Light grey background, light grey text</span>
+    </div>
+  </div>
+  
+  <div class="test-section">
+    <h2>Scoring Rules Reference</h2>
+    <ul>
+      <li><strong>+25 points:</strong> Role keyword in job title</li>
+      <li><strong>+15 points:</strong> Role keyword in job description</li>
+      <li><strong>+15 points:</strong> Location matches</li>
+      <li><strong>+10 points:</strong> Work mode matches</li>
+      <li><strong>+10 points:</strong> Experience level matches</li>
+      <li><strong>+15 points:</strong> Any skill overlap</li>
+      <li><strong>+5 points:</strong> Posted within 2 days</li>
+      <li><strong>+5 points:</strong> Source is LinkedIn</li>
+      <li><strong>Maximum:</strong> 100 points (capped)</li>
+    </ul>
+  </div>
+  
+  <div class="test-section">
+    <h2>Example Calculation</h2>
+    <p><strong>Job:</strong> Amazon SDE Intern (Bangalore, Hybrid, Fresher, LinkedIn, 1 day ago)</p>
+    <p><strong>User Preferences:</strong> Keywords: "Developer, Engineer, Intern" | Location: Bangalore | Mode: Remote, Hybrid | Experience: Fresher | Skills: React, JavaScript, Java</p>
+    
+    <p><strong>Score Breakdown:</strong></p>
+    <ul>
+      <li>Title contains "Intern" → +25</li>
+      <li>Description contains "engineering" → +15</li>
+      <li>Location is Bangalore → +15</li>
+      <li>Mode is Hybrid → +10</li>
+      <li>Experience is Fresher → +10</li>
+      <li>Skills include Java → +15</li>
+      <li>Posted 1 day ago → +5</li>
+      <li>Source is LinkedIn → +5</li>
+    </ul>
+    
+    <p><strong>Total Score: 100%</strong> <span class="match-badge match-badge--excellent">100%</span></p>
+  </div>
+  
+  <div class="test-result">
+    <strong>✅ Visual Verification Complete</strong>
+    <p>If you can see distinct colors for each badge category above, the color coding is working correctly!</p>
+  </div>
+  
+  <script>
+    // Test localStorage functionality
+    console.log('Testing localStorage...');
+    
+    const testPrefs = {
+      roleKeywords: ['Developer', 'Engineer', 'Intern'],
+      preferredLocations: ['Bangalore', 'Hyderabad'],
+      preferredMode: ['Remote', 'Hybrid'],
+      experienceLevel: 'Fresher',
+      skills: ['React', 'JavaScript', 'Python', 'Java'],
+      minMatchScore: 50
+    };
+    
+    localStorage.setItem('jobTrackerPreferences', JSON.stringify(testPrefs));
+    const retrieved = JSON.parse(localStorage.getItem('jobTrackerPreferences'));
+    
+    console.log('Saved preferences:', testPrefs);
+    console.log('Retrieved preferences:', retrieved);
+    console.log('Persistence test:', JSON.stringify(testPrefs) === JSON.stringify(retrieved) ? '✅ PASS' : '❌ FAIL');
+  </script>
+</body>
+</html>

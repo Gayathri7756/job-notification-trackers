@@ -715,27 +715,27 @@
 }
 
 .match-badge--excellent {
-  background-color: #E8F5E9;
-  color: var(--color-success);
-  border: 1px solid var(--color-success);
+  background-color: #D4EDDA;
+  color: #155724;
+  border: 1px solid #28A745;
 }
 
 .match-badge--good {
-  background-color: #FFF4E6;
-  color: var(--color-warning);
-  border: 1px solid var(--color-warning);
+  background-color: #FFF3CD;
+  color: #856404;
+  border: 1px solid #FFC107;
 }
 
 .match-badge--neutral {
-  background-color: var(--color-background);
-  color: var(--color-text-secondary);
-  border: 1px solid var(--color-border);
+  background-color: #E2E3E5;
+  color: #383D41;
+  border: 1px solid #6C757D;
 }
 
 .match-badge--low {
-  background-color: #F5F5F5;
-  color: #9E9E9E;
-  border: 1px solid #E0E0E0;
+  background-color: #F8F9FA;
+  color: #6C757D;
+  border: 1px solid #DEE2E6;
 }
 
 /* ============================================
