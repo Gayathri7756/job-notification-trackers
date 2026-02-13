@@ -3,7 +3,7 @@
 // ============================================
 
 // State management
-let filteredJobs = [...jobsData];
+let filteredJobs = [...jobsData].sort((a, b) => a.postedDaysAgo - b.postedDaysAgo);
 let savedJobIds = JSON.parse(localStorage.getItem('savedJobs') || '[]');
 
 // Utility functions
