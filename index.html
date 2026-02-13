@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KodNest Premium Build System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="design-system.css">
+</head>
+<body>
+  <div class="app-container">
+    
+    <!-- TOP BAR -->
+    <header class="top-bar">
+      <div class="top-bar__project">Project Name</div>
+      <div class="top-bar__progress">Step 1 / 5</div>
+      <div class="top-bar__status top-bar__status--not-started">Not Started</div>
+    </header>
+
+    <!-- CONTEXT HEADER -->
+    <section class="context-header">
+      <h1 class="context-header__title">Design System Reference</h1>
+      <p class="context-header__subtitle">A calm, intentional foundation for building serious products</p>
+    </section>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+      
+      <!-- PRIMARY WORKSPACE -->
+      <div class="primary-workspace">
+        
+        <div class="card">
+          <h3 class="card__title">Typography Example</h3>
+          <div class="card__content">
+            <h2>This is a heading</h2>
+            <p>This is body text set at 16px with a line height of 1.7. The maximum width is constrained to 720px for optimal readability. Every typographic decision is intentional and consistent across the entire system.</p>
+            <p class="text-secondary">This is secondary text, used for supporting information that doesn't require primary emphasis.</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 class="card__title">Button Variations</h3>
+          <div class="card__content">
+            <div class="btn-group mb-md">
+              <button class="btn btn-primary">Primary Action</button>
+              <button class="btn btn-secondary">Secondary Action</button>
+            </div>
+            <div class="btn-group">
+              <button class="btn btn-success">It Worked</button>
+              <button class="btn btn-warning">Error</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 class="card__title">Form Elements</h3>
+          <div class="card__content">
+            <input type="text" class="input mb-sm" placeholder="Enter text here">
+            <textarea class="textarea" placeholder="Enter longer content here"></textarea>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 class="card__title">Error State Example</h3>
+          <div class="card__content">
+            <div class="error-state">
+              <div class="error-state__title">Build Failed</div>
+              <div class="error-state__message">The deployment could not complete because the environment variable API_KEY is missing.</div>
+              <div class="error-state__action">Add the API_KEY to your environment settings and try again.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 class="card__title">Empty State Example</h3>
+          <div class="card__content">
+            <div class="empty-state">
+              <div class="empty-state__title">No builds yet</div>
+              <div class="empty-state__message">Start your first build to see results here</div>
+              <button class="btn btn-primary">Create Build</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- SECONDARY PANEL -->
+      <aside class="secondary-panel">
+        
+        <div class="step-explanation">
+          <div class="step-explanation__title">What This Step Does</div>
+          <div class="step-explanation__content">
+            This panel provides context and guidance for each step. Instructions are brief and actionable.
+          </div>
+        </div>
+
+        <div class="prompt-box">
+          <div class="prompt-box__header">
+            <span class="prompt-box__label">Prompt</span>
+            <button class="btn btn-secondary">Copy</button>
+          </div>
+          <div class="prompt-box__content">Create a landing page with a hero section, feature grid, and call-to-action.</div>
+        </div>
+
+        <div class="btn-group">
+          <button class="btn btn-secondary">Copy</button>
+          <button class="btn btn-secondary">Build in Lovable</button>
+        </div>
+
+        <div class="btn-group">
+          <button class="btn btn-success">It Worked</button>
+          <button class="btn btn-warning">Error</button>
+        </div>
+
+        <button class="btn btn-secondary">Add Screenshot</button>
+
+      </aside>
+
+    </main>
+
+    <!-- PROOF FOOTER -->
+    <footer class="proof-footer">
+      <div class="proof-footer__checklist">
+        <div class="proof-footer__item">
+          <div class="proof-footer__checkbox"></div>
+          <span>UI Built</span>
+        </div>
+        <div class="proof-footer__item">
+          <div class="proof-footer__checkbox"></div>
+          <span>Logic Working</span>
+        </div>
+        <div class="proof-footer__item">
+          <div class="proof-footer__checkbox"></div>
+          <span>Test Passed</span>
+        </div>
+        <div class="proof-footer__item">
+          <div class="proof-footer__checkbox proof-footer__checkbox--checked"></div>
+          <span>Deployed</span>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+</body>
+</html>
