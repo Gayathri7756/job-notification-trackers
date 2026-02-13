@@ -193,16 +193,33 @@ function applyFilters() {
   if (sort === 'latest') {
     filteredJobs.sort((a, b) => a.postedDaysAgo - b.postedDaysAgo);
   } else if (sort === 'company') {
-    filteredJobs.sort((a, b) => a.company.localeCompare(b.company));
+    filteredJobs.sort((a, b) => {
+      const companyA = a.company.toLowerCase();
+      const companyB = b.company.toLowerCase();
+      return companyA.localeCompare(companyB);
+    });
   } else if (sort === 'match') {
     filteredJobs.sort((a, b) => calculateMatchScore(b) - calculateMatchScore(a));
   } else if (sort === 'salary') {
     filteredJobs.sort((a, b) => {
-      const extractNum = (str) => {
-        const match = str.match(/(\d+)/);
-        return match ? parseInt(match[1]) : 0;
+      const extractMaxSalary = (str) => {
+        // Extract all numbers from salary string
+        const numbers = str.match(/\d+/g);
+        if (!numbers || numbers.length === 0) return 0;
+        
+        // For ranges like "10-18 LPA", take the max (18)
+        // For internships like "₹25k-₹40k/month", take the max (40)
+        const maxNum = Math.max(...numbers.map(n => parseInt(n)));
+        
+        // If it's in LPA (Lakhs Per Annum), multiply by 100 to compare with monthly
+        if (str.includes('LPA')) {
+          return maxNum * 100;
+        }
+        // If it's monthly internship (in thousands), keep as is
+        return maxNum;
       };
-      return extractNum(b.salaryRange) - extractNum(a.salaryRange);
+      
+      return extractMaxSalary(b.salaryRange) - extractMaxSalary(a.salaryRange);
     });
   }
   
