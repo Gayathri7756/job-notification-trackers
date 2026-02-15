@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test - Job Notification Tracker</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #F7F6F3;
+      padding: 40px;
+      text-align: center;
+    }
+    .test-card {
+      background: white;
+      padding: 40px;
+      border-radius: 8px;
+      max-width: 600px;
+      margin: 0 auto;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .success {
+      color: #2D5016;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+    .button {
+      background: #8B0000;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      margin: 10px;
+    }
+    .button:hover {
+      background: #6D0000;
+    }
+  </style>
+</head>
+<body>
+  <div class="test-card">
+    <div class="success">✅ SUCCESS!</div>
+    <h1>Job Notification Tracker</h1>
+    <p>If you can see this page, your browser setup is working correctly!</p>
+    
+    <h2>Next Steps:</h2>
+    <p>1. Close this tab</p>
+    <p>2. Open <strong>app.html</strong> (not this test file)</p>
+    <p>3. You should see "Stop Missing The Right Jobs" headline</p>
+    
+    <div style="margin-top: 30px;">
+      <a href="app.html" class="button">Open Main App</a>
+      <button class="button" onclick="testLocalStorage()">Test Browser Features</button>
+    </div>
+    
+    <div id="test-results" style="margin-top: 20px; padding: 20px; background: #f0f0f0; border-radius: 4px; display: none;">
+      <h3>Browser Test Results:</h3>
+      <div id="results-content"></div>
+    </div>
+  </div>
+
+  <script>
+    function testLocalStorage() {
+      const results = document.getElementById('test-results');
+      const content = document.getElementById('results-content');
+      
+      let testResults = [];
+      
+      // Test localStorage
+      try {
+        localStorage.setItem('test', 'working');
+        const value = localStorage.getItem('test');
+        localStorage.removeItem('test');
+        testResults.push('✅ localStorage: Working');
+      } catch (e) {
+        testResults.push('❌ localStorage: Not working - ' + e.message);
+      }
+      
+      // Test JavaScript
+      testResults.push('✅ JavaScript: Working (you can see this)');
+      
+      // Test current location
+      testResults.push('📍 Current URL: ' + window.location.href);
+      
+      // Test file protocol
+      if (window.location.protocol === 'file:') {
+        testResults.push('✅ File protocol: Working');
+      } else {
+        testResults.push('⚠️ Protocol: ' + window.location.protocol + ' (should be file:)');
+      }
+      
+      content.innerHTML = testResults.join('<br>');
+      results.style.display = 'block';
+    }
+    
+    // Auto-test on load
+    console.log('🔍 Test page loaded successfully!');
+    console.log('📍 Current URL:', window.location.href);
+    console.log('🌐 Protocol:', window.location.protocol);
+  </script>
+</body>
+</html>
