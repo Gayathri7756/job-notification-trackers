@@ -1026,16 +1026,119 @@ function renderDigest() {
 }
 
 function renderProof() {
+  const testChecklist = JSON.parse(localStorage.getItem('testChecklist') || '{}');
+  
+  const tests = [
+    { id: 'preferences-persist', label: 'Preferences persist after refresh', tooltip: 'Go to Settings, fill preferences, save, refresh page, check if values are still there' },
+    { id: 'match-score', label: 'Match score calculates correctly', tooltip: 'Set preferences, check if job cards show match score badges with correct percentages' },
+    { id: 'show-matches-toggle', label: '"Show only matches" toggle works', tooltip: 'Enable toggle on Dashboard, verify only jobs above threshold are shown' },
+    { id: 'save-job-persist', label: 'Save job persists after refresh', tooltip: 'Click Save on a job, refresh page, check if job appears in Saved page' },
+    { id: 'apply-new-tab', label: 'Apply opens in new tab', tooltip: 'Click Apply button on any job, verify it opens company career page in new tab' },
+    { id: 'status-persist', label: 'Status update persists after refresh', tooltip: 'Change job status to Applied, refresh page, verify status is still Applied' },
+    { id: 'status-filter', label: 'Status filter works correctly', tooltip: 'Set status filter to Applied, click Apply Filters, verify only Applied jobs show' },
+    { id: 'digest-top-10', label: 'Digest generates top 10 by score', tooltip: 'Generate digest, verify it shows top 10 jobs sorted by match score' },
+    { id: 'digest-persist', label: 'Digest persists for the day', tooltip: 'Generate digest, refresh page, verify same digest is still showing' },
+    { id: 'no-console-errors', label: 'No console errors on main pages', tooltip: 'Open DevTools Console (F12), navigate through all pages, verify no red errors' }
+  ];
+  
+  const checkedCount = tests.filter(test => testChecklist[test.id]).length;
+  const allPassed = checkedCount === tests.length;
+  
   routeContent.innerHTML = `
     <div class="page-header">
-      <h1>Proof</h1>
-      <p class="text-secondary">Track your progress and collect artifacts</p>
+      <h1>Test Checklist</h1>
+      <p class="text-secondary">Verify all features before shipping</p>
     </div>
-    <div class="empty-state">
-      <div class="empty-state__title">Artifact collection</div>
-      <div class="empty-state__message">This section will be built in the next step</div>
+    
+    <div class="test-checklist-container">
+      <div class="card">
+        <div class="test-summary ${allPassed ? 'test-summary--complete' : 'test-summary--incomplete'}">
+          <div class="test-summary__count">
+            <span class="test-summary__number">${checkedCount}</span>
+            <span class="test-summary__total">/ ${tests.length}</span>
+          </div>
+          <div class="test-summary__label">Tests Passed</div>
+          ${!allPassed ? `
+            <div class="test-summary__warning">
+              ⚠️ Resolve all issues before shipping
+            </div>
+          ` : `
+            <div class="test-summary__success">
+              ✅ All tests passed! Ready to ship.
+            </div>
+          `}
+        </div>
+        
+        <div class="test-actions">
+          <button type="button" class="btn btn-secondary btn-sm" onclick="resetTestStatus()">Reset Test Status</button>
+        </div>
+        
+        <div class="test-checklist">
+          ${tests.map(test => `
+            <div class="test-item ${testChecklist[test.id] ? 'test-item--checked' : ''}">
+              <label class="test-item__label">
+                <input 
+                  type="checkbox" 
+                  class="test-item__checkbox" 
+                  ${testChecklist[test.id] ? 'checked' : ''}
+                  onchange="toggleTestItem('${test.id}')"
+                >
+                <span class="test-item__text">${test.label}</span>
+              </label>
+              <button 
+                type="button" 
+                class="test-item__tooltip-btn" 
+                onclick="showTestTooltip(this, '${test.tooltip.replace(/'/g, "&apos;")}')"
+                title="How to test"
+              >
+                ?
+              </button>
+            </div>
+          `).join('')}
+        </div>
+      </div>
     </div>
   `;
+}
+
+function toggleTestItem(testId) {
+  const testChecklist = JSON.parse(localStorage.getItem('testChecklist') || '{}');
+  testChecklist[testId] = !testChecklist[testId];
+  localStorage.setItem('testChecklist', JSON.stringify(testChecklist));
+  renderProof();
+}
+
+function resetTestStatus() {
+  if (confirm('Are you sure you want to reset all test status?')) {
+    localStorage.removeItem('testChecklist');
+    renderProof();
+  }
+}
+
+function showTestTooltip(button, message) {
+  // Remove existing tooltips
+  document.querySelectorAll('.test-tooltip').forEach(t => t.remove());
+  
+  const tooltip = document.createElement('div');
+  tooltip.className = 'test-tooltip';
+  tooltip.textContent = message;
+  
+  const rect = button.getBoundingClientRect();
+  tooltip.style.position = 'fixed';
+  tooltip.style.top = (rect.bottom + 8) + 'px';
+  tooltip.style.left = (rect.left - 150) + 'px';
+  
+  document.body.appendChild(tooltip);
+  
+  // Remove on click outside
+  setTimeout(() => {
+    document.addEventListener('click', function removeTooltip(e) {
+      if (!tooltip.contains(e.target) && e.target !== button) {
+        tooltip.remove();
+        document.removeEventListener('click', removeTooltip);
+      }
+    });
+  }, 100);
 }
 
 // Update active link
