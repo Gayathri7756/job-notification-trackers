@@ -432,8 +432,8 @@ function renderDashboard() {
         <option value="company" ${currentFilters.sort === 'company' ? 'selected' : ''}>Company A-Z</option>
       </select>
       
-      <button class="btn btn-primary" onclick="applyFilters()">Apply Filters</button>
-      <button class="btn btn-secondary" onclick="clearFilters()">Clear Filters</button>
+      <button type="button" class="btn btn-primary" onclick="applyFilters()">Apply Filters</button>
+      <button type="button" class="btn btn-secondary" onclick="clearFilters()">Clear Filters</button>
     </div>
     
     <div class="jobs-grid">
@@ -474,19 +474,19 @@ function renderDashboard() {
           <div class="job-card__status">
             <span class="status-badge ${statusBadgeClass}">${currentStatus}</span>
             <div class="status-buttons">
-              <button class="status-btn ${currentStatus === 'Not Applied' ? 'status-btn--active' : ''}" onclick="setJobStatus(${job.id}, 'Not Applied')" title="Not Applied">Not Applied</button>
-              <button class="status-btn status-btn--applied ${currentStatus === 'Applied' ? 'status-btn--active' : ''}" onclick="setJobStatus(${job.id}, 'Applied')" title="Applied">Applied</button>
-              <button class="status-btn status-btn--rejected ${currentStatus === 'Rejected' ? 'status-btn--active' : ''}" onclick="setJobStatus(${job.id}, 'Rejected')" title="Rejected">Rejected</button>
-              <button class="status-btn status-btn--selected ${currentStatus === 'Selected' ? 'status-btn--active' : ''}" onclick="setJobStatus(${job.id}, 'Selected')" title="Selected">Selected</button>
+              <button type="button" class="status-btn ${currentStatus === 'Not Applied' ? 'status-btn--active' : ''}" onclick="setJobStatus(${job.id}, 'Not Applied')" title="Not Applied">Not Applied</button>
+              <button type="button" class="status-btn status-btn--applied ${currentStatus === 'Applied' ? 'status-btn--active' : ''}" onclick="setJobStatus(${job.id}, 'Applied')" title="Applied">Applied</button>
+              <button type="button" class="status-btn status-btn--rejected ${currentStatus === 'Rejected' ? 'status-btn--active' : ''}" onclick="setJobStatus(${job.id}, 'Rejected')" title="Rejected">Rejected</button>
+              <button type="button" class="status-btn status-btn--selected ${currentStatus === 'Selected' ? 'status-btn--active' : ''}" onclick="setJobStatus(${job.id}, 'Selected')" title="Selected">Selected</button>
             </div>
           </div>
           
           <div class="job-card__footer">
             <span class="job-card__posted">${formatPostedDate(job.postedDaysAgo)}</span>
             <div class="job-card__actions">
-              <button class="btn btn-secondary btn-sm" onclick="showJobModal(${job.id})">View</button>
-              <button class="btn btn-secondary btn-sm" onclick="saveJob(${job.id})">Save</button>
-              <button class="btn btn-primary btn-sm" onclick="window.open('${job.applyUrl}', '_blank')">Apply</button>
+              <button type="button" class="btn btn-secondary btn-sm" onclick="showJobModal(${job.id})">View</button>
+              <button type="button" class="btn btn-secondary btn-sm" onclick="saveJob(${job.id})">Save</button>
+              <button type="button" class="btn btn-primary btn-sm" onclick="window.open('${job.applyUrl}', '_blank')">Apply</button>
             </div>
           </div>
         </div>
@@ -844,19 +844,19 @@ function renderSaved() {
             <div class="job-card__status">
               <span class="status-badge ${statusBadgeClass}">${currentStatus}</span>
               <div class="status-buttons">
-                <button class="status-btn ${currentStatus === 'Not Applied' ? 'status-btn--active' : ''}" onclick="setJobStatus(${job.id}, 'Not Applied')" title="Not Applied">Not Applied</button>
-                <button class="status-btn status-btn--applied ${currentStatus === 'Applied' ? 'status-btn--active' : ''}" onclick="setJobStatus(${job.id}, 'Applied')" title="Applied">Applied</button>
-                <button class="status-btn status-btn--rejected ${currentStatus === 'Rejected' ? 'status-btn--active' : ''}" onclick="setJobStatus(${job.id}, 'Rejected')" title="Rejected">Rejected</button>
-                <button class="status-btn status-btn--selected ${currentStatus === 'Selected' ? 'status-btn--active' : ''}" onclick="setJobStatus(${job.id}, 'Selected')" title="Selected">Selected</button>
+                <button type="button" class="status-btn ${currentStatus === 'Not Applied' ? 'status-btn--active' : ''}" onclick="setJobStatus(${job.id}, 'Not Applied')" title="Not Applied">Not Applied</button>
+                <button type="button" class="status-btn status-btn--applied ${currentStatus === 'Applied' ? 'status-btn--active' : ''}" onclick="setJobStatus(${job.id}, 'Applied')" title="Applied">Applied</button>
+                <button type="button" class="status-btn status-btn--rejected ${currentStatus === 'Rejected' ? 'status-btn--active' : ''}" onclick="setJobStatus(${job.id}, 'Rejected')" title="Rejected">Rejected</button>
+                <button type="button" class="status-btn status-btn--selected ${currentStatus === 'Selected' ? 'status-btn--active' : ''}" onclick="setJobStatus(${job.id}, 'Selected')" title="Selected">Selected</button>
               </div>
             </div>
             
             <div class="job-card__footer">
               <span class="job-card__posted">${formatPostedDate(job.postedDaysAgo)}</span>
               <div class="job-card__actions">
-                <button class="btn btn-secondary btn-sm" onclick="showJobModal(${job.id})">View</button>
-                <button class="btn btn-warning btn-sm" onclick="unsaveJob(${job.id})">Remove</button>
-                <button class="btn btn-primary btn-sm" onclick="window.open('${job.applyUrl}', '_blank')">Apply</button>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="showJobModal(${job.id})">View</button>
+                <button type="button" class="btn btn-warning btn-sm" onclick="unsaveJob(${job.id})">Remove</button>
+                <button type="button" class="btn btn-primary btn-sm" onclick="window.open('${job.applyUrl}', '_blank')">Apply</button>
               </div>
             </div>
           </div>
@@ -936,7 +936,7 @@ function renderDigest() {
           <h3 class="card__title">Generate Today's Digest</h3>
           <div class="card__content">
             <p>Get your top 10 matched jobs for ${today}</p>
-            <button class="btn btn-primary" onclick="generateDigest()">Generate Today's 9AM Digest</button>
+            <button type="button" class="btn btn-primary" onclick="generateDigest()">Generate Today's 9AM Digest</button>
           </div>
         </div>
       </div>
@@ -975,7 +975,7 @@ function renderDigest() {
             
             <div class="digest-actions">
               <a href="#settings" class="btn btn-secondary">Update Preferences</a>
-              <button class="btn btn-primary" onclick="generateDigest()">Try Again</button>
+              <button type="button" class="btn btn-primary" onclick="generateDigest()">Try Again</button>
             </div>
           </div>
         ` : `
@@ -1006,10 +1006,10 @@ function renderDigest() {
             </div>
             
             <div class="digest-actions">
-              <button class="btn btn-secondary" onclick="copyDigestToClipboard()">Copy Digest to Clipboard</button>
-              <button class="btn btn-secondary" onclick="createEmailDraft()">Create Email Draft</button>
-              <button class="btn btn-primary" onclick="generateDigest()">Regenerate Digest</button>
-              <button class="btn btn-warning" onclick="clearDigestCache()">Clear Cache & Regenerate</button>
+              <button type="button" class="btn btn-secondary" onclick="copyDigestToClipboard()">Copy Digest to Clipboard</button>
+              <button type="button" class="btn btn-secondary" onclick="createEmailDraft()">Create Email Draft</button>
+              <button type="button" class="btn btn-primary" onclick="generateDigest()">Regenerate Digest</button>
+              <button type="button" class="btn btn-warning" onclick="clearDigestCache()">Clear Cache & Regenerate</button>
             </div>
           </div>
         `}
