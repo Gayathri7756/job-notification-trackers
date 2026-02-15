@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diagnostic Check</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; }
+    .check { padding: 10px; margin: 10px 0; border-radius: 4px; }
+    .pass { background: #d4edda; border: 1px solid #28a745; }
+    .fail { background: #f8d7da; border: 1px solid #dc3545; }
+    button { padding: 10px 20px; font-size: 16px; margin: 10px 5px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1>Job Tracker Diagnostic</h1>
+  
+  <h2>1. Check if files load</h2>
+  <div id="filesCheck"></div>
+  
+  <h2>2. Check localStorage</h2>
+  <div id="storageCheck"></div>
+  
+  <h2>3. Test Functions</h2>
+  <button onclick="testFilters()">Test Filters</button>
+  <button onclick="testPreferences()">Test Preferences</button>
+  <button onclick="clearAllData()">Clear All Data</button>
+  
+  <div id="testResults"></div>
+  
+  <h2>4. Current Data</h2>
+  <pre id="currentData"></pre>
+  
+  <script src="jobs-data.js"></script>
+  <script src="router.js"></script>
+  
+  <script>
+    // Check if files loaded
+    setTimeout(() => {
+      const filesCheck = document.getElementById('filesCheck');
+      
+      if (typeof jobsData !== 'undefined') {
+        filesCheck.innerHTML += `<div class="check pass">✓ jobs-data.js loaded (${jobsData.length} jobs)</div>`;
+      } else {
+        filesCheck.innerHTML += `<div class="check fail">✗ jobs-data.js NOT loaded</div>`;
+      }
+      
+      if (typeof applyFilters === 'function') {
+        filesCheck.innerHTML += `<div class="check pass">✓ router.js loaded (applyFilters function exists)</div>`;
+      } else {
+        filesCheck.innerHTML += `<div class="check fail">✗ router.js NOT loaded or applyFilters missing</div>`;
+      }
+      
+      if (typeof savePreferences === 'function') {
+        filesCheck.innerHTML += `<div class="check pass">✓ savePreferences function exists</div>`;
+      } else {
+        filesCheck.innerHTML += `<div class="check fail">✗ savePreferences function missing</div>`;
+      }
+    }, 100);
+    
+    // Check localStorage
+    function checkStorage() {
+      const storageCheck = document.getElementById('storageCheck');
+      storageCheck.innerHTML = '';
+      
+      const savedJobs = localStorage.getItem('savedJobs');
+      const preferences = localStorage.getItem('jobTrackerPreferences');
+      const statuses = localStorage.getItem('jobTrackerStatus');
+      const digest = localStorage.getItem('dailyDigest');
+      
+      storageCheck.innerHTML += `<div class="check ${savedJobs ? 'pass' : 'fail'}">Saved Jobs: ${savedJobs ? JSON.parse(savedJobs).length + ' jobs' : 'None'}</div>`;
+      storageCheck.innerHTML += `<div class="check ${preferences ? 'pass' : 'fail'}">Preferences: ${preferences ? 'Set' : 'Not set'}</div>`;
+      storageCheck.innerHTML += `<div class="check ${statuses ? 'pass' : 'fail'}">Job Statuses: ${statuses ? Object.keys(JSON.parse(statuses)).length + ' jobs' : 'None'}</div>`;
+      storageCheck.innerHTML += `<div class="check ${digest ? 'pass' : 'fail'}">Digest: ${digest ? 'Generated' : 'Not generated'}</div>`;
+    }
+    
+    checkStorage();
+    
+    function testFilters() {
+      const results = document.getElementById('testResults');
+      results.innerHTML = '<h3>Filter Test Results:</h3>';
+      
+      try {
+        if (typeof applyFilters === 'function') {
+          results.innerHTML += '<div class="check pass">✓ applyFilters function is callable</div>';
+          results.innerHTML += '<div class="check pass">Try clicking "Apply Filters" button on Dashboard</div>';
+        } else {
+          results.innerHTML += '<div class="check fail">✗ applyFilters function not found</div>';
+        }
+      } catch(e) {
+        results.innerHTML += `<div class="check fail">✗ Error: ${e.message}</div>`;
+      }
+    }
+    
+    function testPreferences() {
+      const results = document.getElementById('testResults');
+      results.innerHTML = '<h3>Preferences Test Results:</h3>';
+      
+      try {
+        if (typeof savePreferences === 'function') {
+          results.innerHTML += '<div class="check pass">✓ savePreferences function is callable</div>';
+          results.innerHTML += '<div class="check pass">Go to Settings page and fill the form</div>';
+        } else {
+          results.innerHTML += '<div class="check fail">✗ savePreferences function not found</div>';
+        }
+      } catch(e) {
+        results.innerHTML += `<div class="check fail">✗ Error: ${e.message}</div>`;
+      }
+    }
+    
+    function clearAllData() {
+      if (confirm('Clear all localStorage data?')) {
+        localStorage.clear();
+        alert('All data cleared!');
+        checkStorage();
+        showCurrentData();
+      }
+    }
+    
+    function showCurrentData() {
+      const currentData = document.getElementById('currentData');
+      currentData.textContent = JSON.stringify({
+        savedJobs: JSON.parse(localStorage.getItem('savedJobs') || '[]'),
+        preferences: JSON.parse(localStorage.getItem('jobTrackerPreferences') || 'null'),
+        statuses: JSON.parse(localStorage.getItem('jobTrackerStatus') || '{}')
+      }, null, 2);
+    }
+    
+    showCurrentData();
+  </script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Filter Test</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    .filter-bar { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+    select, input, button { padding: 8px; font-size: 14px; }
+    .result { padding: 10px; background: #f0f0f0; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h1>Filter Test</h1>
+  
+  <div class="filter-bar">
+    <input type="text" id="keyword" placeholder="Keyword">
+    
+    <select id="location">
+      <option value="">All Locations</option>
+      <option value="Bangalore">Bangalore</option>
+      <option value="Hyderabad">Hyderabad</option>
+      <option value="Pune">Pune</option>
+    </select>
+    
+    <select id="mode">
+      <option value="">All Modes</option>
+      <option value="Remote">Remote</option>
+      <option value="Hybrid">Hybrid</option>
+      <option value="Onsite">Onsite</option>
+    </select>
+    
+    <select id="status">
+      <option value="">All Status</option>
+      <option value="Not Applied">Not Applied</option>
+      <option value="Applied">Applied</option>
+      <option value="Rejected">Rejected</option>
+      <option value="Selected">Selected</option>
+    </select>
+    
+    <button onclick="testFilters()">Apply Filters</button>
+  </div>
+  
+  <div class="result" id="result">
+    Select filters and click Apply Filters
+  </div>
+  
+  <script>
+    function testFilters() {
+      const keyword = document.getElementById('keyword').value;
+      const location = document.getElementById('location').value;
+      const mode = document.getElementById('mode').value;
+      const status = document.getElementById('status').value;
+      
+      document.getElementById('result').innerHTML = `
+        <strong>Filters Applied:</strong><br>
+        Keyword: ${keyword || 'None'}<br>
+        Location: ${location || 'All'}<br>
+        Mode: ${mode || 'All'}<br>
+        Status: ${status || 'All'}
+      `;
+      
+      console.log('Filters:', { keyword, location, mode, status });
+    }
+  </script>
+</body>
+</html>
