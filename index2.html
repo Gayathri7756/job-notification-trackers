@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Job Notification Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="design-system.css">
+  <link rel="stylesheet" href="routes.css">
+</head>
+<body>
+  <div class="app-container">
+    
+    <!-- TOP NAVIGATION -->
+    <nav class="top-nav">
+      <div class="top-nav__container">
+        <button class="top-nav__hamburger" id="hamburger" aria-label="Toggle menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        
+        <ul class="top-nav__links" id="navLinks">
+          <li><a href="#dashboard" class="top-nav__link" data-route="dashboard">Dashboard</a></li>
+          <li><a href="#saved" class="top-nav__link" data-route="saved">Saved</a></li>
+          <li><a href="#digest" class="top-nav__link" data-route="digest">Digest</a></li>
+          <li><a href="#settings" class="top-nav__link" data-route="settings">Settings</a></li>
+          <li><a href="#proof" class="top-nav__link" data-route="proof">Proof</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- ROUTE CONTENT -->
+    <main class="route-content" id="routeContent">
+      <!-- Dynamic content loads here -->
+    </main>
+
+  </div>
+
+  <script src="jobs-data.js"></script>
+  <script src="router.js"></script>
+</body>
+</html>
