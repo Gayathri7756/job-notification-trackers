@@ -566,29 +566,49 @@ function generateDigest() {
   // Calculate match scores for all jobs
   const jobsWithScores = jobsData.map(job => {
     const score = calculateMatchScore(job);
-    console.log(`${job.title} at ${job.company}: ${score}% match`);
+    console.log(`${job.title} at ${job.company} (${job.location}, ${job.mode}): ${score}% match`);
     return {
       ...job,
       matchScore: score
     };
   });
   
-  // Filter jobs that meet minimum criteria (at least some match)
-  // Only include jobs with match score > 0 (meaning they have at least one matching criteria)
-  const matchingJobs = jobsWithScores.filter(job => job.matchScore > 0);
-  console.log(`Found ${matchingJobs.length} jobs with some matches`);
+  // Apply strict filtering based on user preferences
+  let filteredJobs = jobsWithScores;
+  
+  // Filter by work mode if specified (STRICT)
+  if (userPreferences.preferredMode && userPreferences.preferredMode.length > 0) {
+    filteredJobs = filteredJobs.filter(job => userPreferences.preferredMode.includes(job.mode));
+    console.log(`After mode filter (${userPreferences.preferredMode.join(', ')}): ${filteredJobs.length} jobs`);
+  }
+  
+  // Filter by location if specified (STRICT)
+  if (userPreferences.preferredLocations && userPreferences.preferredLocations.length > 0) {
+    filteredJobs = filteredJobs.filter(job => userPreferences.preferredLocations.includes(job.location));
+    console.log(`After location filter (${userPreferences.preferredLocations.join(', ')}): ${filteredJobs.length} jobs`);
+  }
+  
+  // Filter by experience if specified (STRICT)
+  if (userPreferences.experienceLevel && userPreferences.experienceLevel !== '') {
+    filteredJobs = filteredJobs.filter(job => job.experience === userPreferences.experienceLevel);
+    console.log(`After experience filter (${userPreferences.experienceLevel}): ${filteredJobs.length} jobs`);
+  }
+  
+  // Only include jobs with match score > 0 (at least some keyword/skill match)
+  const matchingJobs = filteredJobs.filter(job => job.matchScore > 0);
+  console.log(`After score filter (>0%): ${matchingJobs.length} jobs`);
   
   // Further filter based on user's minimum threshold if set
   const minThreshold = userPreferences.minMatchScore || 0;
   const qualifiedJobs = matchingJobs.filter(job => job.matchScore >= minThreshold);
-  console.log(`Found ${qualifiedJobs.length} jobs meeting ${minThreshold}% threshold`);
+  console.log(`After threshold filter (>=${minThreshold}%): ${qualifiedJobs.length} jobs`);
   
   // Sort by match score (highest first) and take top 10
   const topJobs = qualifiedJobs
     .sort((a, b) => b.matchScore - a.matchScore)
     .slice(0, 10);
   
-  console.log(`Top ${topJobs.length} jobs for digest:`, topJobs.map(j => `${j.title} (${j.matchScore}%)`));
+  console.log(`Top ${topJobs.length} jobs for digest:`, topJobs.map(j => `${j.title} at ${j.company} (${j.mode}) - ${j.matchScore}%`));
   
   // Create digest object
   const digest = {
@@ -601,7 +621,13 @@ function generateDigest() {
     generatedAt: new Date().toISOString(),
     jobs: topJobs,
     totalMatching: matchingJobs.length,
-    totalQualified: qualifiedJobs.length
+    totalQualified: qualifiedJobs.length,
+    appliedFilters: {
+      mode: userPreferences.preferredMode,
+      locations: userPreferences.preferredLocations,
+      experience: userPreferences.experienceLevel,
+      minScore: minThreshold
+    }
   };
   
   // Save to localStorage
