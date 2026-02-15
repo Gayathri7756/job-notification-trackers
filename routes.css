@@ -752,3 +752,167 @@
     flex-direction: row;
   }
 }
+/* ============================================
+   DIGEST STYLES
+   ============================================ */
+.digest-generator {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.digest-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.digest-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.digest-header {
+  background-color: var(--color-background);
+  padding: var(--space-lg);
+  text-align: center;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.digest-header h2 {
+  font-family: var(--font-serif);
+  font-size: 32px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-xs);
+}
+
+.digest-date {
+  font-size: 16px;
+  color: var(--color-accent);
+  font-weight: 500;
+  margin-bottom: var(--space-xs);
+}
+
+.digest-subtitle {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+.digest-content {
+  padding: var(--space-lg);
+}
+
+.digest-job {
+  display: flex;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  border-bottom: 1px solid var(--color-border);
+  transition: background-color var(--transition-standard);
+}
+
+.digest-job:last-child {
+  border-bottom: none;
+}
+
+.digest-job:hover {
+  background-color: var(--color-background);
+}
+
+.digest-job__rank {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  background-color: var(--color-accent);
+  color: var(--color-surface);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.digest-job__content {
+  flex: 1;
+}
+
+.digest-job__title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: 4px;
+}
+
+.digest-job__company {
+  font-size: 15px;
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-xs);
+}
+
+.digest-job__meta {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-xs);
+}
+
+.digest-job__score {
+  color: var(--color-accent);
+  font-weight: 500;
+}
+
+.digest-job__salary {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-accent);
+}
+
+.digest-actions {
+  padding: var(--space-lg);
+  background-color: var(--color-background);
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  gap: var(--space-sm);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ============================================
+   MOBILE RESPONSIVE - DIGEST
+   ============================================ */
+@media (max-width: 768px) {
+  .digest-container {
+    margin: 0 var(--space-sm);
+  }
+  
+  .digest-header {
+    padding: var(--space-md);
+  }
+  
+  .digest-header h2 {
+    font-size: 24px;
+  }
+  
+  .digest-content {
+    padding: var(--space-md);
+  }
+  
+  .digest-job {
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+  
+  .digest-job__rank {
+    align-self: flex-start;
+  }
+  
+  .digest-actions {
+    flex-direction: column;
+    padding: var(--space-md);
+  }
+  
+  .digest-actions .btn {
+    width: 100%;
+  }
+}
