@@ -940,3 +940,224 @@
   font-size: 14px;
   color: var(--color-text-secondary);
 }
+
+
+/* ============================================
+   JOB STATUS TRACKING
+   ============================================ */
+.job-card__status {
+  margin-bottom: var(--space-sm);
+  padding: var(--space-sm) 0;
+  border-top: 1px solid var(--color-border);
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--space-xs);
+}
+
+.status-badge--not-applied {
+  background-color: #E2E3E5;
+  color: #383D41;
+  border: 1px solid #6C757D;
+}
+
+.status-badge--applied {
+  background-color: #D1ECF1;
+  color: #0C5460;
+  border: 1px solid #17A2B8;
+}
+
+.status-badge--rejected {
+  background-color: #F8D7DA;
+  color: #721C24;
+  border: 1px solid #DC3545;
+}
+
+.status-badge--selected {
+  background-color: #D4EDDA;
+  color: #155724;
+  border: 1px solid #28A745;
+}
+
+.status-buttons {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.status-btn {
+  padding: 4px 8px;
+  font-size: 11px;
+  font-weight: 500;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+  color: var(--color-text-secondary);
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all var(--transition-standard);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.status-btn:hover {
+  background-color: var(--color-background);
+  border-color: var(--color-text-secondary);
+}
+
+.status-btn--active {
+  font-weight: 600;
+  color: var(--color-text-primary);
+  border-width: 2px;
+}
+
+.status-btn--applied.status-btn--active {
+  background-color: #D1ECF1;
+  color: #0C5460;
+  border-color: #17A2B8;
+}
+
+.status-btn--rejected.status-btn--active {
+  background-color: #F8D7DA;
+  color: #721C24;
+  border-color: #DC3545;
+}
+
+.status-btn--selected.status-btn--active {
+  background-color: #D4EDDA;
+  color: #155724;
+  border-color: #28A745;
+}
+
+/* ============================================
+   TOAST NOTIFICATIONS
+   ============================================ */
+.toast {
+  position: fixed;
+  bottom: var(--space-lg);
+  right: var(--space-lg);
+  background-color: var(--color-text-primary);
+  color: var(--color-surface);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.3s ease-in-out;
+  z-index: 2000;
+}
+
+.toast--show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ============================================
+   STATUS UPDATES SECTION (DIGEST)
+   ============================================ */
+.status-updates-section {
+  margin-bottom: var(--space-xl);
+}
+
+.section-title {
+  font-family: var(--font-serif);
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-md);
+  letter-spacing: -0.02em;
+}
+
+.status-updates-list {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.status-update-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-md);
+  border-bottom: 1px solid var(--color-border);
+  transition: background-color var(--transition-standard);
+}
+
+.status-update-item:last-child {
+  border-bottom: none;
+}
+
+.status-update-item:hover {
+  background-color: var(--color-background);
+}
+
+.status-update-content {
+  flex: 1;
+}
+
+.status-update-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: 4px;
+}
+
+.status-update-company {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+.status-update-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-xs);
+}
+
+.status-update-date {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+/* ============================================
+   MOBILE RESPONSIVE - STATUS TRACKING
+   ============================================ */
+@media (max-width: 768px) {
+  .status-buttons {
+    gap: 2px;
+  }
+  
+  .status-btn {
+    font-size: 10px;
+    padding: 3px 6px;
+  }
+  
+  .toast {
+    bottom: var(--space-sm);
+    right: var(--space-sm);
+    left: var(--space-sm);
+    text-align: center;
+  }
+  
+  .status-update-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-sm);
+  }
+  
+  .status-update-meta {
+    align-items: flex-start;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+  }
+}

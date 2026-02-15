@@ -6,6 +6,7 @@
 let filteredJobs = [...jobsData].sort((a, b) => a.postedDaysAgo - b.postedDaysAgo);
 let savedJobIds = JSON.parse(localStorage.getItem('savedJobs') || '[]');
 let userPreferences = JSON.parse(localStorage.getItem('jobTrackerPreferences') || 'null');
+let jobStatuses = JSON.parse(localStorage.getItem('jobTrackerStatus') || '{}');
 let showOnlyMatches = false;
 
 // Utility functions
@@ -13,6 +14,63 @@ function formatPostedDate(daysAgo) {
   if (daysAgo === 0) return 'Today';
   if (daysAgo === 1) return '1 day ago';
   return `${daysAgo} days ago`;
+}
+
+// Job Status Management
+function getJobStatus(jobId) {
+  return jobStatuses[jobId] || 'Not Applied';
+}
+
+function setJobStatus(jobId, status) {
+  jobStatuses[jobId] = status;
+  localStorage.setItem('jobTrackerStatus', JSON.stringify(jobStatuses));
+  
+  // Store status change history for digest
+  const statusHistory = JSON.parse(localStorage.getItem('jobStatusHistory') || '[]');
+  statusHistory.unshift({
+    jobId,
+    status,
+    timestamp: new Date().toISOString()
+  });
+  // Keep only last 20 status changes
+  localStorage.setItem('jobStatusHistory', JSON.stringify(statusHistory.slice(0, 20)));
+  
+  // Show toast notification
+  showToast(`Status updated: ${status}`);
+  
+  // Re-render current page
+  const currentRoute = window.location.hash.slice(1) || 'home';
+  if (currentRoute === 'dashboard') renderDashboard();
+  if (currentRoute === 'saved') renderSaved();
+}
+
+function getStatusBadgeClass(status) {
+  switch(status) {
+    case 'Applied': return 'status-badge--applied';
+    case 'Rejected': return 'status-badge--rejected';
+    case 'Selected': return 'status-badge--selected';
+    default: return 'status-badge--not-applied';
+  }
+}
+
+function showToast(message) {
+  // Remove existing toast if any
+  const existingToast = document.querySelector('.toast');
+  if (existingToast) existingToast.remove();
+  
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  
+  // Trigger animation
+  setTimeout(() => toast.classList.add('toast--show'), 10);
+  
+  // Remove after 3 seconds
+  setTimeout(() => {
+    toast.classList.remove('toast--show');
+    setTimeout(() => toast.remove(), 300);
+  }, 3000);
 }
 
 // Match Score Engine
@@ -165,6 +223,7 @@ function applyFilters() {
   const mode = document.getElementById('filterMode')?.value || '';
   const experience = document.getElementById('filterExperience')?.value || '';
   const source = document.getElementById('filterSource')?.value || '';
+  const status = document.getElementById('filterStatus')?.value || '';
   const sort = document.getElementById('filterSort')?.value || 'latest';
   
   filteredJobs = jobsData.filter(job => {
@@ -176,8 +235,9 @@ function applyFilters() {
     const matchMode = !mode || job.mode === mode;
     const matchExperience = !experience || job.experience === experience;
     const matchSource = !source || job.source === source;
+    const matchStatus = !status || getJobStatus(job.id) === status;
     
-    const passesFilters = matchKeyword && matchLocation && matchMode && matchExperience && matchSource;
+    const passesFilters = matchKeyword && matchLocation && matchMode && matchExperience && matchSource && matchStatus;
     
     // Apply match threshold filter if enabled
     if (showOnlyMatches && userPreferences) {
@@ -238,6 +298,7 @@ function clearFilters() {
   document.getElementById('filterMode').value = '';
   document.getElementById('filterExperience').value = '';
   document.getElementById('filterSource').value = '';
+  document.getElementById('filterStatus').value = '';
   document.getElementById('filterSort').value = 'latest';
   
   // Reset filtered jobs to all jobs
@@ -300,6 +361,7 @@ function renderDashboard() {
     mode: document.getElementById('filterMode')?.value || '',
     experience: document.getElementById('filterExperience')?.value || '',
     source: document.getElementById('filterSource')?.value || '',
+    status: document.getElementById('filterStatus')?.value || '',
     sort: document.getElementById('filterSort')?.value || 'latest'
   };
   
@@ -355,6 +417,14 @@ function renderDashboard() {
         <option value="Indeed" ${currentFilters.source === 'Indeed' ? 'selected' : ''}>Indeed</option>
       </select>
       
+      <select id="filterStatus" class="input filter-select">
+        <option value="">All Status</option>
+        <option value="Not Applied" ${currentFilters.status === 'Not Applied' ? 'selected' : ''}>Not Applied</option>
+        <option value="Applied" ${currentFilters.status === 'Applied' ? 'selected' : ''}>Applied</option>
+        <option value="Rejected" ${currentFilters.status === 'Rejected' ? 'selected' : ''}>Rejected</option>
+        <option value="Selected" ${currentFilters.status === 'Selected' ? 'selected' : ''}>Selected</option>
+      </select>
+      
       <select id="filterSort" class="input filter-select">
         <option value="latest" ${currentFilters.sort === 'latest' ? 'selected' : ''}>Latest First</option>
         ${hasPreferences ? `<option value="match" ${currentFilters.sort === 'match' ? 'selected' : ''}>Match Score</option>` : ''}
@@ -375,6 +445,8 @@ function renderDashboard() {
       ` : filteredJobs.map(job => {
         const matchScore = hasPreferences ? calculateMatchScore(job) : 0;
         const badgeClass = getMatchScoreBadgeClass(matchScore);
+        const currentStatus = getJobStatus(job.id);
+        const statusBadgeClass = getStatusBadgeClass(currentStatus);
         
         return `
         <div class="job-card">
@@ -398,6 +470,16 @@ function renderDashboard() {
           </div>
           
           <div class="job-card__salary">${job.salaryRange}</div>
+          
+          <div class="job-card__status">
+            <span class="status-badge ${statusBadgeClass}">${currentStatus}</span>
+            <div class="status-buttons">
+              <button class="status-btn ${currentStatus === 'Not Applied' ? 'status-btn--active' : ''}" onclick="setJobStatus(${job.id}, 'Not Applied')" title="Not Applied">Not Applied</button>
+              <button class="status-btn status-btn--applied ${currentStatus === 'Applied' ? 'status-btn--active' : ''}" onclick="setJobStatus(${job.id}, 'Applied')" title="Applied">Applied</button>
+              <button class="status-btn status-btn--rejected ${currentStatus === 'Rejected' ? 'status-btn--active' : ''}" onclick="setJobStatus(${job.id}, 'Rejected')" title="Rejected">Rejected</button>
+              <button class="status-btn status-btn--selected ${currentStatus === 'Selected' ? 'status-btn--active' : ''}" onclick="setJobStatus(${job.id}, 'Selected')" title="Selected">Selected</button>
+            </div>
+          </div>
           
           <div class="job-card__footer">
             <span class="job-card__posted">${formatPostedDate(job.postedDaysAgo)}</span>
@@ -735,7 +817,11 @@ function renderSaved() {
       </div>
     ` : `
       <div class="jobs-grid">
-        ${savedJobs.map(job => `
+        ${savedJobs.map(job => {
+          const currentStatus = getJobStatus(job.id);
+          const statusBadgeClass = getStatusBadgeClass(currentStatus);
+          
+          return `
           <div class="job-card">
             <div class="job-card__header">
               <div>
@@ -755,6 +841,16 @@ function renderSaved() {
             
             <div class="job-card__salary">${job.salaryRange}</div>
             
+            <div class="job-card__status">
+              <span class="status-badge ${statusBadgeClass}">${currentStatus}</span>
+              <div class="status-buttons">
+                <button class="status-btn ${currentStatus === 'Not Applied' ? 'status-btn--active' : ''}" onclick="setJobStatus(${job.id}, 'Not Applied')" title="Not Applied">Not Applied</button>
+                <button class="status-btn status-btn--applied ${currentStatus === 'Applied' ? 'status-btn--active' : ''}" onclick="setJobStatus(${job.id}, 'Applied')" title="Applied">Applied</button>
+                <button class="status-btn status-btn--rejected ${currentStatus === 'Rejected' ? 'status-btn--active' : ''}" onclick="setJobStatus(${job.id}, 'Rejected')" title="Rejected">Rejected</button>
+                <button class="status-btn status-btn--selected ${currentStatus === 'Selected' ? 'status-btn--active' : ''}" onclick="setJobStatus(${job.id}, 'Selected')" title="Selected">Selected</button>
+              </div>
+            </div>
+            
             <div class="job-card__footer">
               <span class="job-card__posted">${formatPostedDate(job.postedDaysAgo)}</span>
               <div class="job-card__actions">
@@ -764,7 +860,7 @@ function renderSaved() {
               </div>
             </div>
           </div>
-        `).join('')}
+        `}).join('')}
       </div>
     `}
   `;
@@ -773,6 +869,7 @@ function renderSaved() {
 function renderDigest() {
   const hasPreferences = userPreferences !== null;
   const savedDigest = JSON.parse(localStorage.getItem('dailyDigest') || 'null');
+  const statusHistory = JSON.parse(localStorage.getItem('jobStatusHistory') || '[]');
   const today = new Date().toLocaleDateString('en-US', { 
     weekday: 'long', 
     year: 'numeric', 
@@ -782,6 +879,16 @@ function renderDigest() {
   
   // Check if saved digest is from today
   const isDigestFromToday = savedDigest && savedDigest.date === today;
+  
+  // Get recent status updates (last 10)
+  const recentUpdates = statusHistory.slice(0, 10).map(update => {
+    const job = jobsData.find(j => j.id === update.jobId);
+    if (!job) return null;
+    return {
+      ...update,
+      job
+    };
+  }).filter(u => u !== null);
   
   routeContent.innerHTML = `
     <div class="page-header">
@@ -793,6 +900,33 @@ function renderDigest() {
       <div class="preference-banner">
         <span>⚙️ Set your preferences to generate personalized digest.</span>
         <a href="#settings" class="btn btn-secondary btn-sm">Go to Settings</a>
+      </div>
+    ` : ''}
+    
+    ${recentUpdates.length > 0 ? `
+      <div class="status-updates-section">
+        <h2 class="section-title">Recent Status Updates</h2>
+        <div class="status-updates-list">
+          ${recentUpdates.map(update => {
+            const statusBadgeClass = getStatusBadgeClass(update.status);
+            const updateDate = new Date(update.timestamp);
+            const formattedDate = updateDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            const formattedTime = updateDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+            
+            return `
+              <div class="status-update-item">
+                <div class="status-update-content">
+                  <h4 class="status-update-title">${update.job.title}</h4>
+                  <div class="status-update-company">${update.job.company}</div>
+                </div>
+                <div class="status-update-meta">
+                  <span class="status-badge ${statusBadgeClass}">${update.status}</span>
+                  <span class="status-update-date">${formattedDate} at ${formattedTime}</span>
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
       </div>
     ` : ''}
     
