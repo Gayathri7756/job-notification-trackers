@@ -503,6 +503,17 @@ function renderDashboard() {
         applyFilters();
       });
     }
+    
+    // Prevent form elements from causing navigation
+    const formElements = document.querySelectorAll('#routeContent input, #routeContent select, #routeContent button, #routeContent textarea');
+    formElements.forEach(element => {
+      element.addEventListener('click', (e) => {
+        e.stopPropagation();
+      });
+      element.addEventListener('change', (e) => {
+        e.stopPropagation();
+      });
+    });
   }, 0);
 }
 
@@ -588,6 +599,19 @@ function renderSettings() {
       </div>
     </div>
   `;
+  
+  // Prevent form elements from causing navigation
+  setTimeout(() => {
+    const formElements = document.querySelectorAll('.settings-container input, .settings-container select, .settings-container button, .settings-container textarea, .settings-container label');
+    formElements.forEach(element => {
+      element.addEventListener('click', (e) => {
+        e.stopPropagation();
+      });
+      element.addEventListener('change', (e) => {
+        e.stopPropagation();
+      });
+    });
+  }, 0);
 }
 
 function savePreferences() {
@@ -1113,8 +1137,21 @@ function initRouter() {
     navLinksContainer.classList.toggle('active');
   });
   
+  // Prevent form elements from triggering navigation
+  document.addEventListener('click', (e) => {
+    // Stop propagation for form elements
+    if (e.target.matches('input, select, button, option, label, textarea')) {
+      e.stopPropagation();
+    }
+  }, true); // Use capture phase
+  
   // Close menu when clicking outside
   document.addEventListener('click', (e) => {
+    // Don't interfere with form elements, buttons, or inputs
+    if (e.target.matches('input, select, button, option, label, textarea')) {
+      return;
+    }
+    
     if (!e.target.closest('.top-nav') && navLinksContainer.classList.contains('active')) {
       navLinksContainer.classList.remove('active');
       hamburger.classList.remove('active');
