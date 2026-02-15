@@ -1027,6 +1027,7 @@ function renderDigest() {
 
 function renderProof() {
   const testChecklist = JSON.parse(localStorage.getItem('testChecklist') || '{}');
+  const proofData = JSON.parse(localStorage.getItem('proofData') || '{}');
   
   const tests = [
     { id: 'preferences-persist', label: 'Preferences persist after refresh', tooltip: 'Go to Settings, fill preferences, save, refresh page, check if values are still there' },
@@ -1041,30 +1042,83 @@ function renderProof() {
     { id: 'no-console-errors', label: 'No console errors on main pages', tooltip: 'Open DevTools Console (F12), navigate through all pages, verify no red errors' }
   ];
   
+  const steps = [
+    { id: 1, name: 'KodNest Premium Design System', status: 'Completed' },
+    { id: 2, name: 'Route Skeleton', status: 'Completed' },
+    { id: 3, name: 'Landing Page & Navigation', status: 'Completed' },
+    { id: 4, name: 'Job Data & Rendering', status: 'Completed' },
+    { id: 5, name: 'Preferences & Match Scoring', status: 'Completed' },
+    { id: 6, name: 'Daily Digest Engine', status: 'Completed' },
+    { id: 7, name: 'Job Status Tracking', status: 'Completed' },
+    { id: 8, name: 'Test Checklist System', status: 'Completed' }
+  ];
+  
   const checkedCount = tests.filter(test => testChecklist[test.id]).length;
-  const allPassed = checkedCount === tests.length;
+  const allTestsPassed = checkedCount === tests.length;
+  
+  const hasLovableLink = proofData.lovableLink && isValidUrl(proofData.lovableLink);
+  const hasGithubLink = proofData.githubLink && isValidUrl(proofData.githubLink);
+  const hasDeployedUrl = proofData.deployedUrl && isValidUrl(proofData.deployedUrl);
+  const allLinksProvided = hasLovableLink && hasGithubLink && hasDeployedUrl;
+  
+  const isShipped = allTestsPassed && allLinksProvided;
+  const projectStatus = isShipped ? 'Shipped' : (allLinksProvided || checkedCount > 0 ? 'In Progress' : 'Not Started');
   
   routeContent.innerHTML = `
     <div class="page-header">
-      <h1>Test Checklist</h1>
-      <p class="text-secondary">Verify all features before shipping</p>
+      <h1>Proof & Submission</h1>
+      <p class="text-secondary">Finalize and submit your project</p>
     </div>
     
-    <div class="test-checklist-container">
+    <div class="proof-container">
+      
+      <!-- PROJECT STATUS -->
+      <div class="card proof-status-card">
+        <div class="proof-status">
+          <div class="proof-status__header">
+            <h2>Project 1 — Job Notification Tracker</h2>
+            <span class="status-badge status-badge--${projectStatus.toLowerCase().replace(' ', '-')}">${projectStatus}</span>
+          </div>
+          ${isShipped ? `
+            <div class="proof-shipped-message">
+              ✅ Project 1 Shipped Successfully.
+            </div>
+          ` : ''}
+        </div>
+      </div>
+      
+      <!-- STEP COMPLETION SUMMARY -->
       <div class="card">
-        <div class="test-summary ${allPassed ? 'test-summary--complete' : 'test-summary--incomplete'}">
+        <h3 class="card__title">Step Completion Summary</h3>
+        <div class="card__content">
+          <div class="steps-list">
+            ${steps.map(step => `
+              <div class="step-item step-item--${step.status.toLowerCase()}">
+                <div class="step-item__number">${step.id}</div>
+                <div class="step-item__name">${step.name}</div>
+                <div class="step-item__status">${step.status}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      </div>
+      
+      <!-- TEST CHECKLIST -->
+      <div class="card">
+        <h3 class="card__title">Test Checklist</h3>
+        <div class="test-summary ${allTestsPassed ? 'test-summary--complete' : 'test-summary--incomplete'}">
           <div class="test-summary__count">
             <span class="test-summary__number">${checkedCount}</span>
             <span class="test-summary__total">/ ${tests.length}</span>
           </div>
           <div class="test-summary__label">Tests Passed</div>
-          ${!allPassed ? `
+          ${!allTestsPassed ? `
             <div class="test-summary__warning">
-              ⚠️ Resolve all issues before shipping
+              ⚠️ Complete all tests before shipping
             </div>
           ` : `
             <div class="test-summary__success">
-              ✅ All tests passed! Ready to ship.
+              ✅ All tests passed
             </div>
           `}
         </div>
@@ -1097,8 +1151,154 @@ function renderProof() {
           `).join('')}
         </div>
       </div>
+      
+      <!-- ARTIFACT COLLECTION -->
+      <div class="card">
+        <h3 class="card__title">Artifact Collection</h3>
+        <div class="card__content">
+          <form class="proof-form" onsubmit="return false;">
+            <div class="form-group">
+              <label class="form-label">Lovable Project Link</label>
+              <input 
+                type="url" 
+                id="lovableLink" 
+                class="input ${hasLovableLink ? 'input--valid' : ''}" 
+                placeholder="https://lovable.dev/projects/..."
+                value="${proofData.lovableLink || ''}"
+                onblur="saveProofData()"
+              >
+              <small class="form-hint">Enter your Lovable project URL</small>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">GitHub Repository Link</label>
+              <input 
+                type="url" 
+                id="githubLink" 
+                class="input ${hasGithubLink ? 'input--valid' : ''}" 
+                placeholder="https://github.com/username/repo"
+                value="${proofData.githubLink || ''}"
+                onblur="saveProofData()"
+              >
+              <small class="form-hint">Enter your GitHub repository URL</small>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Deployed URL</label>
+              <input 
+                type="url" 
+                id="deployedUrl" 
+                class="input ${hasDeployedUrl ? 'input--valid' : ''}" 
+                placeholder="https://your-project.vercel.app"
+                value="${proofData.deployedUrl || ''}"
+                onblur="saveProofData()"
+              >
+              <small class="form-hint">Enter your live deployment URL (Vercel, Netlify, GitHub Pages, etc.)</small>
+            </div>
+            
+            ${!allLinksProvided ? `
+              <div class="proof-warning">
+                ⚠️ All 3 links are required for submission
+              </div>
+            ` : ''}
+          </form>
+        </div>
+      </div>
+      
+      <!-- FINAL SUBMISSION -->
+      <div class="card">
+        <h3 class="card__title">Final Submission</h3>
+        <div class="card__content">
+          ${!isShipped ? `
+            <div class="submission-requirements">
+              <p><strong>Requirements to ship:</strong></p>
+              <ul>
+                <li>${allTestsPassed ? '✅' : '❌'} All 10 test checklist items passed</li>
+                <li>${hasLovableLink ? '✅' : '❌'} Lovable Project Link provided</li>
+                <li>${hasGithubLink ? '✅' : '❌'} GitHub Repository Link provided</li>
+                <li>${hasDeployedUrl ? '✅' : '❌'} Deployed URL provided</li>
+              </ul>
+            </div>
+          ` : ''}
+          
+          <div class="submission-actions">
+            <button 
+              type="button" 
+              class="btn btn-primary" 
+              onclick="copyFinalSubmission()"
+              ${!isShipped ? 'disabled' : ''}
+            >
+              Copy Final Submission
+            </button>
+          </div>
+        </div>
+      </div>
+      
     </div>
   `;
+}
+
+function isValidUrl(string) {
+  try {
+    const url = new URL(string);
+    return url.protocol === 'http:' || url.protocol === 'https:';
+  } catch (_) {
+    return false;
+  }
+}
+
+function saveProofData() {
+  const lovableLink = document.getElementById('lovableLink').value.trim();
+  const githubLink = document.getElementById('githubLink').value.trim();
+  const deployedUrl = document.getElementById('deployedUrl').value.trim();
+  
+  const proofData = {
+    lovableLink,
+    githubLink,
+    deployedUrl
+  };
+  
+  localStorage.setItem('proofData', JSON.stringify(proofData));
+  
+  // Re-render to update validation states
+  renderProof();
+}
+
+function copyFinalSubmission() {
+  const proofData = JSON.parse(localStorage.getItem('proofData') || '{}');
+  
+  const submissionText = `Job Notification Tracker — Final Submission
+
+Lovable Project:
+${proofData.lovableLink || '[Not provided]'}
+
+GitHub Repository:
+${proofData.githubLink || '[Not provided]'}
+
+Live Deployment:
+${proofData.deployedUrl || '[Not provided]'}
+
+Core Features:
+- Intelligent match scoring
+- Daily digest simulation
+- Status tracking
+- Test checklist enforced
+
+---
+All requirements met. Project ready for review.`;
+
+  navigator.clipboard.writeText(submissionText).then(() => {
+    alert('Final submission copied to clipboard!');
+  }).catch(() => {
+    // Fallback
+    const textArea = document.createElement('textarea');
+    textArea.value = submissionText;
+    document.body.appendChild(textArea);
+    textArea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textArea);
+    alert('Final submission copied to clipboard!');
+  });
 }
 
 function toggleTestItem(testId) {
