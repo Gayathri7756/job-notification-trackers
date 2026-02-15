@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple Dashboard Test</title>
+  <link rel="stylesheet" href="design-system.css">
+  <link rel="stylesheet" href="routes.css">
+</head>
+<body>
+  <div style="max-width: 1200px; margin: 0 auto; padding: 40px 20px;">
+    <h1>Dashboard Filter Test</h1>
+    
+    <div class="filter-bar">
+      <input type="text" id="filterKeyword" class="input filter-input" placeholder="Search by title or company">
+      
+      <select id="filterLocation" class="input filter-select">
+        <option value="">All Locations</option>
+        <option value="Bangalore">Bangalore</option>
+        <option value="Hyderabad">Hyderabad</option>
+        <option value="Pune">Pune</option>
+        <option value="Chennai">Chennai</option>
+      </select>
+      
+      <select id="filterMode" class="input filter-select">
+        <option value="">All Modes</option>
+        <option value="Remote">Remote</option>
+        <option value="Hybrid">Hybrid</option>
+        <option value="Onsite">Onsite</option>
+      </select>
+      
+      <select id="filterExperience" class="input filter-select">
+        <option value="">All Experience</option>
+        <option value="Fresher">Fresher</option>
+        <option value="0-1">0-1 years</option>
+        <option value="1-3">1-3 years</option>
+      </select>
+      
+      <button type="button" class="btn btn-primary" onclick="applyFilters()">Apply Filters</button>
+      <button type="button" class="btn btn-secondary" onclick="clearFilters()">Clear Filters</button>
+    </div>
+    
+    <div id="results" style="margin-top: 30px; padding: 20px; background: #f7f6f3; border: 1px solid #ddd;">
+      <p>Select filters and click Apply Filters</p>
+    </div>
+    
+    <h2 style="margin-top: 40px;">Settings Test</h2>
+    
+    <div class="card" style="max-width: 600px;">
+      <h3 class="card__title">Preferences</h3>
+      <div class="card__content">
+        <div class="form-group">
+          <label class="form-label">Role Keywords</label>
+          <input type="text" id="roleKeywords" class="input" placeholder="e.g. Developer, Engineer">
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Preferred Locations</label>
+          <select id="preferredLocations" class="input" multiple size="5">
+            <option value="Bangalore">Bangalore</option>
+            <option value="Hyderabad">Hyderabad</option>
+            <option value="Pune">Pune</option>
+            <option value="Chennai">Chennai</option>
+            <option value="Mumbai">Mumbai</option>
+          </select>
+          <small class="form-hint">Hold Ctrl/Cmd to select multiple</small>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Work Mode</label>
+          <div class="checkbox-group">
+            <label class="checkbox-label">
+              <input type="checkbox" name="preferredMode" value="Remote">
+              <span>Remote</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" name="preferredMode" value="Hybrid">
+              <span>Hybrid</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" name="preferredMode" value="Onsite">
+              <span>Onsite</span>
+            </label>
+          </div>
+        </div>
+        
+        <button type="button" class="btn btn-primary" onclick="savePrefs()">Save Preferences</button>
+      </div>
+    </div>
+    
+    <div id="prefResults" style="margin-top: 20px; padding: 20px; background: #f7f6f3; border: 1px solid #ddd;">
+      <p>Fill preferences and click Save</p>
+    </div>
+  </div>
+  
+  <script>
+    function applyFilters() {
+      const keyword = document.getElementById('filterKeyword').value;
+      const location = document.getElementById('filterLocation').value;
+      const mode = document.getElementById('filterMode').value;
+      const experience = document.getElementById('filterExperience').value;
+      
+      document.getElementById('results').innerHTML = `
+        <h3>✅ Filters Applied Successfully!</h3>
+        <p><strong>Keyword:</strong> ${keyword || 'None'}</p>
+        <p><strong>Location:</strong> ${location || 'All'}</p>
+        <p><strong>Mode:</strong> ${mode || 'All'}</p>
+        <p><strong>Experience:</strong> ${experience || 'All'}</p>
+        <p style="color: green; font-weight: bold;">If you see this, filters are working!</p>
+      `;
+      
+      console.log('Filters applied:', { keyword, location, mode, experience });
+    }
+    
+    function clearFilters() {
+      document.getElementById('filterKeyword').value = '';
+      document.getElementById('filterLocation').value = '';
+      document.getElementById('filterMode').value = '';
+      document.getElementById('filterExperience').value = '';
+      document.getElementById('results').innerHTML = '<p>Filters cleared. Select new filters.</p>';
+    }
+    
+    function savePrefs() {
+      const roleKeywords = document.getElementById('roleKeywords').value;
+      const locations = Array.from(document.getElementById('preferredLocations').selectedOptions).map(o => o.value);
+      const modes = Array.from(document.querySelectorAll('input[name="preferredMode"]:checked')).map(cb => cb.value);
+      
+      document.getElementById('prefResults').innerHTML = `
+        <h3>✅ Preferences Saved Successfully!</h3>
+        <p><strong>Role Keywords:</strong> ${roleKeywords || 'None'}</p>
+        <p><strong>Locations:</strong> ${locations.join(', ') || 'None'}</p>
+        <p><strong>Work Modes:</strong> ${modes.join(', ') || 'None'}</p>
+        <p style="color: green; font-weight: bold;">If you see this, preferences are working!</p>
+      `;
+      
+      console.log('Preferences saved:', { roleKeywords, locations, modes });
+    }
+    
+    // Test on page load
+    console.log('Page loaded successfully');
+    console.log('Current URL:', window.location.href);
+    console.log('Current hash:', window.location.hash);
+  </script>
+</body>
+</html>
