@@ -561,24 +561,34 @@ function generateDigest() {
     return;
   }
   
+  console.log('🔍 Generating digest with preferences:', userPreferences);
+  
   // Calculate match scores for all jobs
-  const jobsWithScores = jobsData.map(job => ({
-    ...job,
-    matchScore: calculateMatchScore(job)
-  }));
+  const jobsWithScores = jobsData.map(job => {
+    const score = calculateMatchScore(job);
+    console.log(`${job.title} at ${job.company}: ${score}% match`);
+    return {
+      ...job,
+      matchScore: score
+    };
+  });
   
   // Filter jobs that meet minimum criteria (at least some match)
   // Only include jobs with match score > 0 (meaning they have at least one matching criteria)
   const matchingJobs = jobsWithScores.filter(job => job.matchScore > 0);
+  console.log(`Found ${matchingJobs.length} jobs with some matches`);
   
   // Further filter based on user's minimum threshold if set
   const minThreshold = userPreferences.minMatchScore || 0;
   const qualifiedJobs = matchingJobs.filter(job => job.matchScore >= minThreshold);
+  console.log(`Found ${qualifiedJobs.length} jobs meeting ${minThreshold}% threshold`);
   
   // Sort by match score (highest first) and take top 10
   const topJobs = qualifiedJobs
     .sort((a, b) => b.matchScore - a.matchScore)
     .slice(0, 10);
+  
+  console.log(`Top ${topJobs.length} jobs for digest:`, topJobs.map(j => `${j.title} (${j.matchScore}%)`));
   
   // Create digest object
   const digest = {
@@ -596,6 +606,7 @@ function generateDigest() {
   
   // Save to localStorage
   localStorage.setItem('dailyDigest', JSON.stringify(digest));
+  console.log('✅ Digest saved to localStorage');
   
   // Re-render digest page
   renderDigest();
@@ -673,6 +684,13 @@ function createEmailDraft() {
   
   const mailtoLink = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   window.open(mailtoLink);
+}
+
+function clearDigestCache() {
+  localStorage.removeItem('dailyDigest');
+  console.log('🗑️ Digest cache cleared');
+  alert('Digest cache cleared! Generating new digest with current preferences...');
+  generateDigest();
 }
 
 function renderSaved() {
@@ -831,6 +849,7 @@ function renderDigest() {
               <button class="btn btn-secondary" onclick="copyDigestToClipboard()">Copy Digest to Clipboard</button>
               <button class="btn btn-secondary" onclick="createEmailDraft()">Create Email Draft</button>
               <button class="btn btn-primary" onclick="generateDigest()">Regenerate Digest</button>
+              <button class="btn btn-warning" onclick="clearDigestCache()">Clear Cache & Regenerate</button>
             </div>
           </div>
         `}
