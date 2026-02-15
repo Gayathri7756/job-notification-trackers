@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Job Tracker Test</title>
+    <style>
+        body { 
+            font-family: Arial; 
+            background: #f0f0f0; 
+            padding: 50px; 
+            text-align: center; 
+        }
+        .card { 
+            background: white; 
+            padding: 30px; 
+            border-radius: 10px; 
+            max-width: 500px; 
+            margin: 0 auto; 
+        }
+        h1 { color: #8B0000; }
+        .success { color: green; font-size: 24px; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="success">✅ SUCCESS!</div>
+        <h1>Job Notification Tracker</h1>
+        <p><strong>If you can see this, your browser is working!</strong></p>
+        <p>Current URL: <span id="url"></span></p>
+        <button onclick="alert('JavaScript is working!')">Test JavaScript</button>
+    </div>
+    <script>
+        document.getElementById('url').textContent = window.location.href;
+        console.log('✅ Test page loaded successfully!');
+    </script>
+</body>
+</html>
